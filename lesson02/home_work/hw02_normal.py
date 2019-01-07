@@ -11,7 +11,7 @@ numbers = [2, -5, 8, 9, -25, 25, 4]
 result = []
 
 for num in numbers:
-    if num > 0:
+    if num >= 0:
         if sqrt(num) == int(sqrt(num)):
             result += [sqrt(num)]
 print(result)
