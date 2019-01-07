@@ -5,6 +5,13 @@ equation = 'y = -12x + 11111140.2121'
 x = 2.5
 # вычислите и выведите y
 
+token_equal_pos = equation.find("=")
+token_x_pos = equation.find("x")
+token_plus_pos = equation.find("+")
+k = float(equation[token_equal_pos+1:token_x_pos])
+b = float(equation[token_plus_pos+1:])
+
+print("y = {}".format(k*x +b))
 
 # Задание-2: Дата задана в виде строки формата 'dd.mm.yyyy'.
 # Проверить, корректно ли введена дата.
@@ -17,13 +24,48 @@ x = 2.5
 #  (т.е. 2 символа для дня, 2 - для месяца, 4 - для года)
 
 # Пример корректной даты
-date = '01.11.1985'
+##date = '01.11.1985'
 
 # Примеры некорректных дат
-date = '01.22.1001'
-date = '1.12.1001'
-date = '-2.10.3001'
+##date = '01.22.1001'
+##date = '1.12.1001'
+##date = '-2.10.3001'
 
+date = str(input("Введите дату в формате dd.mm.yyyy: "))
+digits = "0123456789"
+
+# проверяем позиции в строке
+is_correct = (date[2] == ".") and (date[5] == ".") and (len(date) == 10)
+
+# убеждаемся что введены только циферки
+for char in date[0:2]+date[3:5]+date[6:]:
+    if char not in digits:
+        is_correct = False
+
+# преобразуем в числа если все правильно, иначе заполняем нулями чтобы не было ошибок
+if is_correct:
+    d = int(date[0:2])
+    m = int(date[3:5])
+    y = int(date[6:])
+else:
+    d = m = y =0
+
+# проверяем год на високосность
+bis_sextus = ((y%4 == 0) and (y%100 != 0)) or (y%400 == 0)
+
+# количество дней от 1 до 31, номер месяца от 1 до 12, номер года от 1 до 9999
+is_correct = is_correct and (d >= 1) and (d <= 31) and (m >= 1) and (m <= 12) and (y >= 1) and (y <= 9999)
+# для указанных месяцев количество дней меньше 31
+is_correct = is_correct and not ((d > 30) and (m in [2,4,6,9,11]))
+# для февраля дней и вовсе меньше 30
+is_correct = is_correct and not ((d > 29) and (m == 2))
+# для високосного года может быть 29
+is_correct = is_correct and not ((m == 2) and (d > 28) and not bis_sextus)
+
+if is_correct:
+    print("Дата введена корректно")
+else:
+    print("Ошибка при вводе даты")
 
 # Задание-3: "Перевёрнутая башня" (Задача олимпиадного уровня)
 #
@@ -54,3 +96,29 @@ date = '-2.10.3001'
 #
 # Вход: 11
 # Выход: 5 3
+n = int(input("Введите номер комнаты: "))
+
+# определяем номер "квадрата" в который входит комната
+sq_num = 0
+k = 0
+while n > k:
+   k += sq_num*sq_num
+   sq_num += 1
+sq_num -= 1
+
+# вычисляем первый и последний  номера в "квадрате"
+sq_start = k+1-sq_num*sq_num
+sq_end = k
+
+# определяем этаж с которого начинается "квадрат"
+i = 0
+sq_start_floor = 1
+while i < sq_num-1:
+    i += 1
+    sq_start_floor += i
+
+# вычисляем этаж и номер комнаты на этаже
+floor = sq_start_floor + (n - sq_start)//sq_num
+left = (n - sq_start)%sq_num + 1
+
+print(f"Комната находится на {floor} этаже. {left} слева")
