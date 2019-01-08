@@ -96,26 +96,24 @@ else:
 #
 # Вход: 11
 # Выход: 5 3
+
 n = int(input("Введите номер комнаты: "))
 
 # определяем номер "квадрата" в который входит комната
 sq_num = 0
-k = 0
-while n > k:
-   k += sq_num*sq_num
+sq_max = 0
+while n > sq_max:
+   sq_max += sq_num*sq_num
    sq_num += 1
 sq_num -= 1
 
-# вычисляем первый и последний  номера в "квадрате"
-sq_start = k+1-sq_num*sq_num
-sq_end = k
+# вычисляем первый номер в "квадрате"
+sq_start = sq_max+1-sq_num*sq_num
 
 # определяем этаж с которого начинается "квадрат"
-i = 0
-sq_start_floor = 1
-while i < sq_num-1:
-    i += 1
-    sq_start_floor += i
+# сумма арифметической прогрессии.
+# целочисленное деление т.к. числитель всегда четный
+sq_start_floor = (sq_num-1)*(sq_num)//2 + 1
 
 # вычисляем этаж и номер комнаты на этаже
 floor = sq_start_floor + (n - sq_start)//sq_num
