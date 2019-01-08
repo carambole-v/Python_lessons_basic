@@ -34,33 +34,30 @@ print("y = {}".format(k*x +b))
 date = str(input("Введите дату в формате dd.mm.yyyy: "))
 digits = "0123456789"
 
-# проверяем позиции в строке
+# проверяем известные позиции в строке и длинну
 is_correct = (date[2] == ".") and (date[5] == ".") and (len(date) == 10)
 
-# убеждаемся что введены только циферки
+# убеждаемся что введены только цифры
 for char in date[0:2]+date[3:5]+date[6:]:
     if char not in digits:
         is_correct = False
 
-# преобразуем в числа если все правильно, иначе заполняем нулями чтобы не было ошибок
+# преобразуем в числа если все правильно и проверяем значения
 if is_correct:
     d = int(date[0:2])
     m = int(date[3:5])
     y = int(date[6:])
-else:
-    d = m = y =0
 
-# проверяем год на високосность
-bis_sextus = ((y%4 == 0) and (y%100 != 0)) or (y%400 == 0)
-
-# количество дней от 1 до 31, номер месяца от 1 до 12, номер года от 1 до 9999
-is_correct = is_correct and (d >= 1) and (d <= 31) and (m >= 1) and (m <= 12) and (y >= 1) and (y <= 9999)
-# для указанных месяцев количество дней меньше 31
-is_correct = is_correct and not ((d > 30) and (m in [2,4,6,9,11]))
-# для февраля дней и вовсе меньше 30
-is_correct = is_correct and not ((d > 29) and (m == 2))
-# для високосного года может быть 29
-is_correct = is_correct and not ((m == 2) and (d > 28) and not bis_sextus)
+    # проверяем год на високосность
+    bis_sextus = ((y%4 == 0) and (y%100 != 0)) or (y%400 == 0)
+    # количество дней от 1 до 31, номер месяца от 1 до 12, номер года от 1 до 9999
+    is_correct = is_correct and (d >= 1) and (d <= 31) and (m >= 1) and (m <= 12) and (y >= 1) and (y <= 9999)
+    # для указанных месяцев количество дней меньше 31
+    is_correct = is_correct and not ((d > 30) and (m in [2,4,6,9,11]))
+    # для февраля дней и вовсе меньше 30
+    is_correct = is_correct and not ((d > 29) and (m == 2))
+    # для високосного года может быть 29
+    is_correct = is_correct and not ((m == 2) and (d > 28) and not bis_sextus)
 
 if is_correct:
     print("Дата введена корректно")
