@@ -80,6 +80,7 @@ def fdiff(f1, f2):
     return integer, numerator//d, denominator//d
 
 
+failed = False
 s = input("Введите выражение: ")
 
 if s.find(" + ") != -1:
