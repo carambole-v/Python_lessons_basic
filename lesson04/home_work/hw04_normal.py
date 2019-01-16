@@ -20,16 +20,10 @@ line = 'mtMmEZUOmcqWiryMQhhTxqKdSTKCYEJlEZCsGAMkgAYEOmHBSQsSUHKvSfbmxULaysmNO'\
        'XiUWgsKQrDOeZoNlZNRvHnLgCmysUeKnVJXPFIzvdDyleXylnKBfLCjLHntltignbQoiQ'\
        'zTYwZAiRwycdlHfyHNGmkNqSwXUrxGc'
 
-# способ с регулярками
+# способ с регулярками, генратором и в одну строку
 import re
 
-lst = []
-while (len(line) > 0) and re.search(r"[a-z]+[A-Z]+[a-z]+", line):
-    substr = re.search(r"[a-z]+[A-Z]+[a-z]+", line)
-    lst.append(line[substr.start():substr.end()])
-    line = line[substr.end()-1:]
-
-print(lst)
+print([item for match in re.findall(r"[a-z]+[A-Z]+[a-z]+", line) for item in re.split("[A-Z]+", match)])
 
 # второй способ. так себе
 small = list(map(chr, range(ord('a'), ord('z')+1)))
