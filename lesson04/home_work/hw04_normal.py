@@ -72,11 +72,11 @@ line_2 = 'mtMmEZUOmcqWiryMQhhTxqKdSTKCYEJlEZCsGAMkgAYEOmHBSQsSUHKvSfbmxULaysm'\
        'JFaXiUWgsKQrDOeZoNlZNRvHnLgCmysUeKnVJXPFIzvdDyleXylnKBfLCjLHntltignbQ'\
        'oiQzTYwZAiRwycdlHfyHNGmkNqSwXUrxGC'
 
-# способ с регулярками
+
+# способ с регулярками, лямбдой и снова одной строкой
 import re
 
-s = re.compile("[a-z][a-z][A-Z]+[A-Z][A-Z]")
-print(list(map(lambda x: x[2:][:-2], s.findall(line_2))))
+print(list(map(lambda x: x[2:][:-2], re.findall("[a-z][a-z][A-Z]+[A-Z][A-Z]", line_2))))
 
 # второй способ. без комментариев
 small = list(map(chr, range(ord('a'), ord('z') + 1)))
