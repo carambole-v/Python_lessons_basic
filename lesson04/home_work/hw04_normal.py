@@ -23,8 +23,13 @@ line = 'mtMmEZUOmcqWiryMQhhTxqKdSTKCYEJlEZCsGAMkgAYEOmHBSQsSUHKvSfbmxULaysmNO'\
 # способ с регулярками
 import re
 
-s = re.compile("[a-z]+[A-Z]+[a-z]+")
-print(s.findall(line))
+lst = []
+while (len(line) > 0) and re.search(r"[a-z]+[A-Z]+[a-z]+", line):
+    substr = re.search(r"[a-z]+[A-Z]+[a-z]+", line)
+    lst.append(line[substr.start():substr.end()])
+    line = line[substr.end()-1:]
+
+print(lst)
 
 # второй способ. так себе
 small = list(map(chr, range(ord('a'), ord('z')+1)))
