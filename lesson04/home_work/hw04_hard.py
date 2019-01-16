@@ -12,7 +12,7 @@ matrix = [[1, 0, 8],
 #                  [8, 1, 2]]
 
 # Суть сложности hard: Решите задачу в одну строку
-print(list(map(list, zip(*[matrix[i] for i in range(len(matrix))]))))
+print(list(map(list, zip(*matrix))))
 
 # Задание-2:
 # Найдите наибольшее произведение пяти последовательных цифр в 1000-значном числе.
