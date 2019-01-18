@@ -47,6 +47,8 @@ def cmd_cp(source_fn):
 
 
 def cmd_rm(filename):
+    if input(f"Будет удален файл {filename}. Для подтверждения операции введите yes: ") != "yes":
+        return
     try:
         os.remove(filename)
     except Exception as e:
