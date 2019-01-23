@@ -201,6 +201,7 @@ def cmd_print_teachers(s):
     return False
 
 
+# меню с привязкой команд
 menu = {0: cmd_halt,
         1: cmd_print_classes,
         2: cmd_print_pupils,
@@ -224,6 +225,7 @@ ol = [("Андреевич", "Андреевна"), ("Евгеньевич", "Е
       ("Семенович", "Семеновна"), ("Анатольевич", "Анатольевна"), ("Романович", "Романовна"),
       ("Федорович", "Федоровна"), ("Петрович", "Петровна"), ("Дмитриевич", "Дмитриевна")]
 
+# предметы и классы в которых они появляются
 subjects = {"Математика": 1, "Физика": 6, "Химия": 8, "Русский язык": 1, "Физкультура": 1,
             "Английский язык": 1, "Биология": 6, "География": 6, "ИЗО": 1, "ОБЖ": 5}
 
@@ -232,9 +234,9 @@ school = School("Школа №123")
 
 # нанимаем учителей
 for i in range(T_CNT):
-    sex = randint(0, 1)  # определяем пол учителя
+    gender = randint(0, 1)  # определяем пол учителя
     s = list(subjects.keys())[randint(0, len(subjects) - 1)]
-    t = Teacher(fl[randint(0, len(fl) - 1)][sex], il[randint(0, len(il) - 1)][sex], ol[randint(0, len(ol) - 1)][sex], s)
+    t = Teacher(fl[randint(0, len(fl) - 1)][gender], il[randint(0, len(il) - 1)][gender], ol[randint(0, len(ol) - 1)][gender], s)
     school.add_teacher(t)
 
 # создаем классы
@@ -243,18 +245,19 @@ for i in range(C_CNT):
     school.add_class(c)
     # наполняем классы учениками
     for j in range(P_CNT):
-        sex = randint(0, 1)  # определяем пол ученика
+        gender = randint(0, 1)  # определяем пол ученика
         f_num = randint(0, len(fl) - 1)
         i_num = randint(0, len(il) - 1)
         o_num = randint(0, len(ol) - 1)
-        p = Pupil(fl[f_num][sex], il[i_num][sex], ol[o_num][sex])
+        p = Pupil(fl[f_num][gender], il[i_num][gender], ol[o_num][gender])
         c.add_pupil(p)
-        # добавляем родителей ученика
+        # добавляем родителей ученика с учетомего имени и фамилии
         f = Parent(fl[f_num][0], il[o_num][0], ol[randint(0, len(ol) - 1)][0])
         p.add_father(f)
         m = Parent(fl[f_num][1], il[randint(0, len(il) - 1)][1], ol[randint(0, len(ol) - 1)][1])
         p.add_mother(m)
 
+    # назначаем учителей классу
     for subject in subjects:
         if i % 10 + 1 >= subjects[subject]:
             teachers = school.get_teachers(subject)
