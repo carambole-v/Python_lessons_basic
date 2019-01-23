@@ -32,7 +32,7 @@ class School:
 
     def print_classes(self):
         for i, cl in enumerate(self.get_classes()):
-            print(f"{i+1}. {cl.get_name()}")
+            print(f"{i + 1}. {cl.get_name()}")
 
     def add_teacher(self, teacher):
         self.__teachers.append(teacher)
@@ -56,6 +56,9 @@ class Human:
 
     def get_fio(self):
         return self.__F, self.__I, self.__O
+
+    def get_str_fio(self):
+        return f"{self.__F} {self.__I} {self.__O}"
 
     def print_fio(self):
         print(f"{self.__F} {self.__I} {self.__O}")
@@ -115,7 +118,7 @@ class Class:
     def print_pupils(self):
         print(f"-------- Состав: {self.get_name()} --------")
         for i, pupil in enumerate(self.get_pupils()):
-            print(f"{i+1} {pupil.get_fio()[0]} {pupil.get_fio()[1]} {pupil.get_fio()[2]}")
+            print(f"{i + 1} {pupil.get_fio()[0]} {pupil.get_fio()[1]} {pupil.get_fio()[2]}")
 
     def get_teachers(self):
         return self.__teachers
@@ -123,7 +126,8 @@ class Class:
     def print_teachers(self):
         print(f"-------- Учителя класса: {self.get_name()} --------")
         for i, teacher in enumerate(self.get_teachers()):
-            print(f"{i+1} {teacher.get_fio()[0]} {teacher.get_fio()[1]} {teacher.get_fio()[2]} ({teacher.get_subject()})")
+            print(f"{i + 1} {teacher.get_fio()[0]} {teacher.get_fio()[1]} {teacher.get_fio()[
+                2]} ({teacher.get_subject()})")
 
     def get_subjects(self):
         subj = []
@@ -132,78 +136,69 @@ class Class:
         return subj
 
     def print_subjects(self):
-        print(f"-------- Предметы в классе: {self.get_name()} --------")
         for i, subj in enumerate(self.get_subjects()):
             print(f"{i + 1} {subj}")
 
 
 def print_menu():
-    print("=================================================================")
-    print("0. Выход")
-    print("1. Получить полный список всех классов школы")
-    print("2. Получить список всех учеников в указанном классе")
-    print("3. Получить список всех предметов указанного ученика")
-    print("4. Узнать ФИО родителей указанного ученика")
-    print("5. Получить список всех Учителей, преподающих в указанном классе")
-    print("=================================================================")
+    print("======================================================================")
+    print("| 0. Выход")
+    print("| 1. Получить полный список всех классов школы")
+    print("| 2. Получить список всех учеников в указанном классе")
+    print("| 3. Получить список всех предметов указанного ученика")
+    print("| 4. Узнать ФИО родителей указанного ученика")
+    print("| 5. Получить список всех Учителей, преподающих в указанном классе")
+    print("======================================================================")
+
 
 def cmd_halt(s):
     return True
+
 
 def cmd_print_classes(s):
     s.print_classes()
     return False
 
+
 def cmd_print_pupils(s):
-    try:
-        n = int(input("Введите порядковый номер класса: "))
-    except:
-        print("Ошибка ввода, придется начинать сначала.")
-    if 1 <= n <= len(s.get_classes())+1:
-        s.get_classes()[n-1].print_pupils()
-    else:
-        print("Такого класса нет")
+    class_name = input("Введите название класса: ")
+
+    for cl in s.get_classes():
+        if class_name == cl.get_name():
+            cl.print_pupils()
+            break
     return False
+
 
 def cmd_print_subjects(s):
-    try:
-        n = int(input("Введите порядковый номер класса: "))
-    except:
-        print("Ошибка ввода, придется начинать сначала.")
-    if 1 <= n <= len(s.get_classes())+1:
-        s.get_classes()[n-1].print_subjects()
-    else:
-        print("Такого ученика в классе нет")
+    fio = input("Введите ФИО ученика: ")
+
+    for cl in s.get_classes():
+        for pupil in cl.get_pupils():
+            if pupil.get_str_fio() == fio:
+                print(f"{pupil.get_str_fio()} ({cl.get_name()})")
+                cl.print_subjects()
     return False
+
 
 def cmd_print_parents(s):
-    try:
-        n = int(input("Введите порядковый номер класса: "))
-    except:
-        print("Ошибка ввода, придется начинать сначала.")
-    if not (1 <= n <= len(s.get_classes())+1):
-        print("Такого класса нет")
-        return False
-    try:
-        m = int(input("Введите порядковый номер ученика: "))
-    except:
-        print("Ошибка ввода, придется начинать сначала.")
-    if 1 <= m <= len(s.get_classes()[n].get_pupils()) + 1:
-        s.get_classes()[n - 1].get_pupils()[m - 1].print_parents()
-    else:
-        print("Такого ученика в классе нет")
+    fio = input("Введите ФИО ученика: ")
 
+    for cl in s.get_classes():
+        for pupil in cl.get_pupils():
+            if pupil.get_str_fio() == fio:
+                print(f"{pupil.get_str_fio()} ({cl.get_name()})")
+                pupil.print_parents()
     return False
 
+
 def cmd_print_teachers(s):
-    try:
-        n = int(input("Введите порядковый номер класса: "))
-    except:
-        print("Ошибка ввода, придется начинать сначала.")
-    if 1 <= n <= len(s.get_classes())+1:
-        s.get_classes()[n-1].print_teachers()
-    else:
-        print("Такого класса нет")
+    class_name = input("Введите название класса: ")
+
+    for cl in s.get_classes():
+        if class_name == cl.get_name():
+            cl.print_teachers()
+            break
     return False
 
 
@@ -213,9 +208,10 @@ menu = {0: cmd_halt,
         3: cmd_print_subjects,
         4: cmd_print_parents,
         5: cmd_print_teachers}
+
 T_CNT = 40  # количество учителей (неограниченно)
-C_CNT = 5   # количеств классов (школа расчитана на 50 классов :) )
-P_CNT = 5   # количество учеников в классе (неограниченно)
+C_CNT = 5  # количеств классов (школа расчитана на 50 классов :) )
+P_CNT = 5  # количество учеников в классе (неограниченно)
 
 # Подготовленные данные
 fl = [("Иванов", "Иванова"), ("Сидоров", "Сидорова"), ("Петров", "Петрова"),
@@ -223,7 +219,7 @@ fl = [("Иванов", "Иванова"), ("Сидоров", "Сидорова")
       ("Кузнецов", "Кузнецова"), ("Волков", "Волкова"), ("Зайцев", "Зайцева"),
       ("Васин", "Васина"), ("Ильин", "Ильина"), ("Губкин", "Губкина")]
 il = [("Андрей", "Анастасия"), ("Евгений", "Евгения"), ("Александр", "Александра"),
-      ("Семен", "Наталья"), ("Анатлоий", "Елена"), ("Роман", "Мария"),
+      ("Семен", "Наталья"), ("Анатолий", "Елена"), ("Роман", "Мария"),
       ("Федор", "Светлана"), ("Петр", "Екатерина"), ("Дмитрий", "Ирина")]
 ol = [("Андреевич", "Андреевна"), ("Евгеньевич", "Евгеньевна"), ("Александрович", "Александровна"),
       ("Семенович", "Семеновна"), ("Анатольевич", "Анатольевна"), ("Романович", "Романовна"),
@@ -236,24 +232,24 @@ school = School("Школа №123")
 
 # нанимаем учителей
 for i in range(T_CNT):
-    sex = randint(0, 1)  # генерируем пол ученика
+    sex = randint(0, 1)  # определяем пол учителя
     s = subjects[randint(0, len(subjects) - 1)]
     t = Teacher(fl[randint(0, len(fl) - 1)][sex], il[randint(0, len(il) - 1)][sex], ol[randint(0, len(ol) - 1)][sex], s)
     school.add_teacher(t)
 
 # создаем классы
 for i in range(C_CNT):
-    c = Class(str(i % 10 + 1)+"АБВГД"[i // 10])
+    c = Class(str(i % 10 + 1) + "АБВГД"[i // 10])
     school.add_class(c)
     # наполняем классы учениками
     for j in range(P_CNT):
-        sex = randint(0, 1)  # генерируем пол ученика
+        sex = randint(0, 1)  # определяем пол ученика
         f_num = randint(0, len(fl) - 1)
         i_num = randint(0, len(il) - 1)
         o_num = randint(0, len(ol) - 1)
         p = Pupil(fl[f_num][sex], il[i_num][sex], ol[o_num][sex])
         c.add_pupil(p)
-        # добавляем родителей
+        # добавляем родителей ученика
         f = Parent(fl[f_num][0], il[o_num][0], ol[randint(0, len(ol) - 1)][0])
         p.add_father(f)
         m = Parent(fl[f_num][1], il[randint(0, len(il) - 1)][1], ol[randint(0, len(ol) - 1)][1])
@@ -261,7 +257,7 @@ for i in range(C_CNT):
 
     for subject in subjects:
         teachers = school.get_teachers(subject)
-        c.add_teacher(teachers[randint(0, len(teachers)-1)])
+        c.add_teacher(teachers[randint(0, len(teachers) - 1)])
 
 halt = False
 while not halt:
@@ -272,6 +268,4 @@ while not halt:
             continue
     except:
         print("Ошибка ввода")
-    menu[i](school)
-
-
+    halt = menu[i](school)
