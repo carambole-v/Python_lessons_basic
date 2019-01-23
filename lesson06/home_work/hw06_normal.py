@@ -126,8 +126,7 @@ class Class:
     def print_teachers(self):
         print(f"-------- Учителя класса: {self.get_name()} --------")
         for i, teacher in enumerate(self.get_teachers()):
-            print(f"{i + 1} {teacher.get_fio()[0]} {teacher.get_fio()[1]} {teacher.get_fio()[
-                2]} ({teacher.get_subject()})")
+            print(f"{i + 1} {teacher.get_fio()[0]} {teacher.get_fio()[1]} {teacher.get_fio()[2]} ({teacher.get_subject()})")
 
     def get_subjects(self):
         subj = []
@@ -210,7 +209,7 @@ menu = {0: cmd_halt,
         5: cmd_print_teachers}
 
 T_CNT = 40  # количество учителей (неограниченно)
-C_CNT = 5  # количеств классов (школа расчитана на 50 классов :) )
+C_CNT = 20  # количеств классов (школа расчитана на 50 классов :) )
 P_CNT = 5  # количество учеников в классе (неограниченно)
 
 # Подготовленные данные
@@ -224,8 +223,9 @@ il = [("Андрей", "Анастасия"), ("Евгений", "Евгения
 ol = [("Андреевич", "Андреевна"), ("Евгеньевич", "Евгеньевна"), ("Александрович", "Александровна"),
       ("Семенович", "Семеновна"), ("Анатольевич", "Анатольевна"), ("Романович", "Романовна"),
       ("Федорович", "Федоровна"), ("Петрович", "Петровна"), ("Дмитриевич", "Дмитриевна")]
-subjects = ["Математика", "Физика", "Химия", "Русский язык", "Физкультура",
-            "Английский язык", "Биология", "География", "ИЗО", "ОБЖ"]
+
+subjects = {"Математика": 1, "Физика": 6, "Химия": 8, "Русский язык": 1, "Физкультура": 1,
+            "Английский язык": 1, "Биология": 6, "География": 6, "ИЗО": 1, "ОБЖ": 5}
 
 # Создаем нашу школу
 school = School("Школа №123")
@@ -233,7 +233,7 @@ school = School("Школа №123")
 # нанимаем учителей
 for i in range(T_CNT):
     sex = randint(0, 1)  # определяем пол учителя
-    s = subjects[randint(0, len(subjects) - 1)]
+    s = list(subjects.keys())[randint(0, len(subjects) - 1)]
     t = Teacher(fl[randint(0, len(fl) - 1)][sex], il[randint(0, len(il) - 1)][sex], ol[randint(0, len(ol) - 1)][sex], s)
     school.add_teacher(t)
 
@@ -256,8 +256,9 @@ for i in range(C_CNT):
         p.add_mother(m)
 
     for subject in subjects:
-        teachers = school.get_teachers(subject)
-        c.add_teacher(teachers[randint(0, len(teachers) - 1)])
+        if i % 10 + 1 >= subjects[subject]:
+            teachers = school.get_teachers(subject)
+            c.add_teacher(teachers[randint(0, len(teachers) - 1)])
 
 halt = False
 while not halt:
@@ -266,6 +267,6 @@ while not halt:
         i = int(input("Введите номер операции: "))
         if not (0 <= i <= 5):
             continue
-    except:
-        print("Ошибка ввода")
+    except Exception as e:
+        print("Ошибка ввода {e}")
     halt = menu[i](school)
