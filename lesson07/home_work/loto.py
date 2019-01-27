@@ -102,6 +102,7 @@ class BarrelsBag(list):
     Класс реализующий мешок с бочонками на основе списка
     """
     def __init__(self):
+        super().__init__()
         # наполняем наш мешок на старте всеми бочонками
         self.extend([Barrel(i + 1) for i in range(90)])
 
@@ -138,7 +139,7 @@ class Card:
     Класс реализующий карточку размером 3x9
     """
     def __init__(self):
-        self.numbers = []
+        numbers = []
         self.rows = []
         # заполняем картоку 3 ряда по 5 цифр, цифры из разных десятков
         # всего 15 неповторяющихся чисел 1..90 и сортируем
@@ -148,13 +149,11 @@ class Card:
             for j in range(5):
                 while True:
                     num = randint(1, 90)
-                    if (num not in self.numbers) and (self.decade(num) not in [self.decade(k) for k in self.rows[i]]):
+                    if (num not in numbers) and (self.decade(num) not in [self.decade(k) for k in self.rows[i]]):
                         self.rows[i].append(num)
-                        self.numbers.append(num)
+                        numbers.append(num)
                         break
             self.rows[i].sort()
-
-        self.numbers.sort()
 
     @staticmethod
     def decade(number):
@@ -176,8 +175,6 @@ class Card:
                 if number in row:
                     index = row.index(number)
                     row[index] *= -1
-            index = self.numbers.index(number)
-            self.numbers[index] *= -1
 
     def print(self):
         print("----------------------------------------------")
@@ -208,9 +205,10 @@ class Player:
 
     def is_win(self):
         cnt = 0
-        for item in self.card.numbers:
-            if item < 0:
-                cnt += 1
+        for row in self.card.rows:
+            for item in row:
+                if item < 0:
+                    cnt += 1
         return cnt == 15
 
 
@@ -242,6 +240,7 @@ class Computer(Player):
             self.card.cross_out(number)
         print(f"Игрок {self.name} сделал свой ход")
         return True
+
 
 loto = Loto()
 loto.start()
