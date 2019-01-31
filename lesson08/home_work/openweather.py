@@ -33,7 +33,7 @@ OpenWeatherMap — онлайн-сервис, который предостав�
 == Получение списка городов ==
     Список городов может быть получен по ссылке:
     http://bulk.openweathermap.org/sample/city.list.json.gz
-    
+
     Далее снова есть несколько вариантов (по желанию):
     - скачать и распаковать список вручную
     - автоматизировать скачивание (ulrlib) и распаковку списка 
@@ -123,3 +123,42 @@ OpenWeatherMap — онлайн-сервис, который предостав�
 
 """
 
+
+from ow_appid import OpenWeatherAppId
+from ow_cities import OpenWeatherCities
+from ow_database import OpenWeatherDatabase
+from ow_api import OpenWeatherApi
+
+
+class OpenWeatherApp:
+    def __init__(self):
+        self.app_id = OpenWeatherAppId()
+        self.cities = OpenWeatherCities()
+        self.api = OpenWeatherApi()
+        self.database = OpenWeatherDatabase()
+
+    def get_weather(self, city_id):
+        weather_data = self.api.get_data(city_id, appid=self.app_id.get_app_id(), units="metric")
+        self.database.add_weather(weather_data)
+        return weather_data
+
+    def menu(self):
+        print("====================================")
+        print("0. Выход")
+        print("1. Получить списока стран")
+        print("2. Выбор города")
+        print("3. ")
+        print("====================================")
+
+    def run(self):
+        self.menu()
+
+
+try:
+    app = OpenWeatherApp()
+    app.run()
+    print(app.cities.get_countries())
+    print(app.cities.get_cities("RU", "Mos+"))
+    print(app.get_weather(526346))
+except Exception as e:
+    print(e)
