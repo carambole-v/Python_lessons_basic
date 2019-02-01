@@ -55,8 +55,17 @@ class OpenWeatherCities(list):
     def get_cities(self, country, city_re=""):
         cities = []
         for city in self:
-            if (city["country"] == country) and (re.match(city_re.lower(), city["name"].lower())):
-                cities.append((city["id"], city["name"]))
+            if (city["country"].lower() == country.lower()) and (re.match(city_re.lower(), city["name"].lower())):
+                cities.append(city["name"])
+
+        return cities
+
+    def get_city_id(self, country, city_name):
+        # возвращает списко id городов по названию (может быть несколько)
+        cities = []
+        for city in self:
+            if (city["country"].lower() == country.lower()) and (city["name"].lower() == city_name.lower()):
+                cities.append(city["id"])
 
         return cities
 

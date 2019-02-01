@@ -6,20 +6,24 @@ class OpenWeatherApi:
     def __init__(self):
         self.API_URL = "http://api.openweathermap.org/data/2.5"
 
-    def get_data(self, *args, appid, units=None):
-        function = "group" if len(args) > 1 else "weather"
+    def get_data(self, city_list, appid, units=None):
         params = {}
-        if len(args) == 1:
-            params["id"] = args[0]
+        if len(city_list) < 1:
+            return dict()
+        elif len(city_list) == 1:
+            function = "weather"
+            params["id"] = city_list[0]
         else:
-            args_str = ""
-            for arg in args:
-                args_str += str(arg) + ","
-            params["id"] = args_str[:-1]
+            function = "group"
+            cities_str = ""
+            for city in city_list:
+                cities_str += str(city) + ","
+            params["id"] = cities_str[:-1]
         if units:
             params["units"] = units
         params["appid"] = appid
         _url = f"{self.API_URL}/{function}?{parse.urlencode(params)}"
+        print(f"TEST: {_url}")
         response = request.urlopen(_url)
         data = response.read()
 

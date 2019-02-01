@@ -47,10 +47,17 @@ class OpenWeatherDatabase:
         return datetime.fromtimestamp(timestamp)
 
     def add_weather(self, data):
-        try:
-            self.__insert_weather(data)
-        except sqlite3.IntegrityError:
-            self.__update_weather(data)
+        if "cnt" in data.keys():
+            for i in range(data["cnt"]):
+                try:
+                    self.__insert_weather(data["list"][i])
+                except sqlite3.IntegrityError:
+                    self.__update_weather(data["list"][i])
+        else:
+            try:
+                self.__insert_weather(data)
+            except sqlite3.IntegrityError:
+                self.__update_weather(data)
 
     def __insert_weather(self, data):
         sql = f"""
@@ -72,6 +79,7 @@ class OpenWeatherDatabase:
                """
         self.cursor.execute(sql)
         for row in self.cursor:
+            print(int(row[0]), int(data["dt"]))
             if int(row[0]) >= int(data["dt"]):
                 return None
 

@@ -137,8 +137,8 @@ class OpenWeatherApp:
         self.api = OpenWeatherApi()
         self.database = OpenWeatherDatabase()
 
-    def get_weather(self, city_id):
-        weather_data = self.api.get_data(city_id, appid=self.app_id.get_app_id(), units="metric")
+    def get_weather(self, cities_id):
+        weather_data = self.api.get_data(cities_id, appid=self.app_id.get_app_id(), units="metric")
         self.database.add_weather(weather_data)
         return weather_data
 
@@ -146,19 +146,66 @@ class OpenWeatherApp:
         print("====================================")
         print("0. Выход")
         print("1. Получить списока стран")
-        print("2. Выбор города")
-        print("3. ")
+        print("2. Поиск города")
+        print("3. Погода в городе")
         print("====================================")
 
+    def __cmd_halt(self):
+        return True
+
+    def __cmd_get_countries(self):
+        print(app.cities.get_countries())
+        return False
+
+    def __cmd_get_cities(self):
+        country = input("Введите страну: ")
+        country = country.lower()
+        if country not in map(lambda x: x.lower(), app.cities.get_countries()):
+            print("Такой страны в базе нет")
+            return False
+        city_re = input("Введите первые буквы названия города: ")
+        print(app.cities.get_cities(country, city_re))
+        return False
+
+    def __cmd_city_weather(self):
+        country = input("Введите страну: ")
+        if country.lower() not in map(lambda x: x.lower(), app.cities.get_countries()):
+            print("Такой страны в базе нет")
+            return False
+        city = input("Введите название города: ")
+        if city.lower() not in map(lambda x: x.lower(), app.cities.get_cities(country)):
+            print("Такого города в БД для выбраноой нет")
+            return False
+        cities_id_list = self.cities.get_city_id(country, city)
+        print(f"В укзанной стране найдено городов с таким названием: {len(cities_id_list)}")
+        print("Запрашиваю погоду по всем...")
+        self.get_weather(cities_id_list)
+        print("Готово")
+        return False
+
+
     def run(self):
+        menu = {0: self.__cmd_halt,
+                1: self.__cmd_get_countries,
+                2: self.__cmd_get_cities,
+                3: self.__cmd_city_weather}
         self.menu()
+        while True:
+            try:
+                n = int(input("Введите операцию: "))
+                if n not in menu.keys():
+                    print("Такого пункта меню нет")
+                    continue
+            except Exception as e:
+                print(f"Ошибка ввода {e}")
+                continue
+
+            if menu[n]():
+                break
 
 
 try:
     app = OpenWeatherApp()
     app.run()
-    print(app.cities.get_countries())
-    print(app.cities.get_cities("RU", "Mos+"))
-    print(app.get_weather(526346))
 except Exception as e:
     print(e)
