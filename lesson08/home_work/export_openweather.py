@@ -43,7 +43,8 @@ class ExportOW:
 
     @staticmethod
     def get_icon(weather_id):
-        if 8 <= datetime.now().timetuple()[3] <= 8:
+        # Покажем картинку в зависимости от времени пользователя
+        if 8 <= datetime.now().timetuple()[3] <= 20:
             day_night = "d"
         else:
             day_night = "n"
@@ -70,14 +71,14 @@ class ExportOW:
             json_file.write(json.dumps(d))
 
     def export_html(self, filename, data):
-        head = ["city_id", "city_name", "weather_date", "temperature", "weather_id"]
+        head = ["id", "Город", "Время последнего обновления", "Температура", "Визуализация"]
         with open(filename, 'w', newline='') as html_file:
             html_file.write("<html>")
             html_file.write("<head>")
             html_file.write("<title>Даннные о погоде</title>")
             html_file.write("</head>")
             html_file.write("<body>")
-            html_file.write("<table border='1'>")
+            html_file.write("<table border='1' cellspacing='0'>")
             html_file.write("<caption>Погода</caption>")
             html_file.write("<tr>")
             for item in head:
@@ -118,6 +119,7 @@ def print_help():
 
 if len(sys.argv) < 3:
     print_help()
+    sys.exit(0)
 
 try:
     city = sys.argv[3]

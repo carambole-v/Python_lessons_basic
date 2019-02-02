@@ -40,9 +40,11 @@ class OpenWeatherDatabase:
 
     @staticmethod
     def sysdate(timestamp):
-        return datetime.fromtimestamp(timestamp)
+        # работаем с utc, т.к.: "Time of data calculation, unix, UTC"
+        return datetime.utcfromtimestamp(timestamp)
 
     def add_weather(self, data):
+        # сохраняемся в БД
         if "cnt" in data.keys():
             for i in range(data["cnt"]):
                 try:
@@ -69,14 +71,14 @@ class OpenWeatherDatabase:
 
     def __update_weather(self, data):
         sql = f"""
-                  SELECT strftime('%s', weather_date) - 3600*3
+                  SELECT strftime('%s', weather_date)
                     FROM ow_weather
                    WHERE city_id = {data["id"]}
                """
         self.cursor.execute(sql)
         for row in self.cursor:
-            print(int(row[0]), int(data["dt"]))
             if int(row[0]) >= int(data["dt"]):
+                # если данные не обновились ничего не делаем
                 return None
 
         sql = f"""
@@ -101,6 +103,7 @@ class OpenWeatherDatabase:
             sql = f"""
                       SELECT *
                         FROM ow_weather
+                       ORDER BY city_name
                    """
         self.cursor.execute(sql)
         return list(self.cursor)

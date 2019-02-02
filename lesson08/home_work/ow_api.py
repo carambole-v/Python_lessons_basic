@@ -23,7 +23,6 @@ class OpenWeatherApi:
             params["units"] = units
         params["appid"] = appid
         _url = f"{self.API_URL}/{function}?{parse.urlencode(params)}"
-        print(f"TEST: {_url}")
         response = request.urlopen(_url)
         data = response.read()
 

@@ -137,13 +137,14 @@ class OpenWeatherApp:
         self.api = OpenWeatherApi()
         self.database = OpenWeatherDatabase()
         try:
+            # пытаемся создать таблицы в БД
             self.database.create_tables()
         except:
-            # ничего не делаем
+            # если ecpetion, то ничего не делаем - таблицы уже есть
             pass
 
-
     def get_weather(self, cities_id):
+        # получаем погоду и записываем в БД
         weather_data = self.api.get_data(cities_id, appid=self.app_id.get_app_id(), units="metric")
         self.database.add_weather(weather_data)
         return weather_data
@@ -151,7 +152,7 @@ class OpenWeatherApp:
     def menu(self):
         print("====================================")
         print("0. Выход")
-        print("1. Получить списока стран")
+        print("1. Получить список доступных стран")
         print("2. Поиск города")
         print("3. Погода в городе")
         print("====================================")
@@ -185,8 +186,14 @@ class OpenWeatherApp:
         cities_id_list = self.cities.get_city_id(country, city)
         print(f"В укзанной стране найдено городов с таким названием: {len(cities_id_list)}")
         print("Запрашиваю погоду по всем...")
-        self.get_weather(cities_id_list)
-        print("Готово")
+        data = self.get_weather(cities_id_list)
+        if "cnt" in data.keys():
+            for i in range(data["cnt"]):
+                print(f"Город {data['list'][i]['name']}, t= {data['list'][i]['main']['temp']} °C")
+        else:
+            print(f"Город {data['name']}, t= {data['main']['temp']} C")
+        print()
+
         return False
 
     def run(self):
@@ -194,9 +201,9 @@ class OpenWeatherApp:
                 1: self.__cmd_get_countries,
                 2: self.__cmd_get_cities,
                 3: self.__cmd_city_weather}
-        self.menu()
         while True:
             try:
+                self.menu()
                 n = int(input("Введите операцию: "))
                 if n not in menu.keys():
                     print("Такого пункта меню нет")
@@ -206,6 +213,7 @@ class OpenWeatherApp:
                 continue
 
             if menu[n]():
+                # вываливаемся если вренули True - только при 0
                 break
 
 
