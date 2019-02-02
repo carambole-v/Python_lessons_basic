@@ -136,6 +136,12 @@ class OpenWeatherApp:
         self.cities = OpenWeatherCities()
         self.api = OpenWeatherApi()
         self.database = OpenWeatherDatabase()
+        try:
+            self.database.create_tables()
+        except:
+            # ничего не делаем
+            pass
+
 
     def get_weather(self, cities_id):
         weather_data = self.api.get_data(cities_id, appid=self.app_id.get_app_id(), units="metric")
@@ -182,7 +188,6 @@ class OpenWeatherApp:
         self.get_weather(cities_id_list)
         print("Готово")
         return False
-
 
     def run(self):
         menu = {0: self.__cmd_halt,

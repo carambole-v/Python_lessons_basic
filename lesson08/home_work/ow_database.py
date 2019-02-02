@@ -13,15 +13,11 @@ class OpenWeatherDatabase:
     def __init__(self):
         self.connection = sqlite3.connect(DATABASE_FILENAME)
         self.cursor = self.connection.cursor()
-        try:
-            self.__create_tables()
-        except:
-            pass
 
     def __del__(self):
         self.connection.close()
 
-    def __create_tables(self):
+    def create_tables(self):
         sql = """
                  CREATE TABLE ow_cities 
                      (city_id integer primary key,
@@ -93,3 +89,18 @@ class OpenWeatherDatabase:
                """
         self.cursor.execute(sql)
         self.connection.commit()
+
+    def get_weather(self, city_name=None):
+        if city_name:
+            sql = f"""
+                      SELECT *
+                        FROM ow_weather
+                       WHERE city_name = '{city_name}'
+                   """
+        else:
+            sql = f"""
+                      SELECT *
+                        FROM ow_weather
+                   """
+        self.cursor.execute(sql)
+        return list(self.cursor)
