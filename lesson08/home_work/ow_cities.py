@@ -17,7 +17,7 @@ class OpenWeatherCities(list):
         self.load()
 
     def update(self):
-        print(f"Loading cities list from {WWW}. Please wait...")
+        print(f"Загружаю список городов {WWW}. Пожалуйста подождите...")
         try:
             response = request.urlopen(CITIES_URL)
             data = response.read()
@@ -26,23 +26,23 @@ class OpenWeatherCities(list):
                 f.write(j)
             self.clear()
             self.extend(json.loads(j))
-            print("Cities loaded successfully.")
+            print("Список городов успешно загружен.")
         except Exception as e:
-            raise Exception(f"Exception in loading cities from {WWW}: {e}")
+            raise Exception(f"Ошибка при загрузке списка с {WWW}: {e}")
 
     def load(self):
         try:
-            print(f"Try load cities from {CITIES_FILENAME}...")
+            print(f"Загружаю список городов из файла {CITIES_FILENAME}...")
             with open(CITIES_FILENAME, "r", encoding="utf-8") as f:
                 j = f.read()
                 self.clear()
                 self.extend(json.loads(j))
-            print(f"Cities loaded successfully")
+            print(f"Города загружены")
         except FileNotFoundError:
-            print(f"File {CITIES_FILENAME} not found.")
+            print(f"Файл {CITIES_FILENAME} не найден.")
             self.update()
         except Exception as e:
-            raise Exception(f"Exception in load cities from file: {e}")
+            raise Exception(f"Ошибка при загрузке городов из файла: {e}")
 
     def get_countries(self):
         countries = set()

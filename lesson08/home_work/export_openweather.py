@@ -71,7 +71,7 @@ class ExportOW:
             json_file.write(json.dumps(d))
 
     def export_html(self, filename, data):
-        head = ["id", "Город", "Время последнего обновления", "Температура", "Визуализация"]
+        head = ["id", "Город", "Время последнего обновления (UTC)", "Температура, °C", "Визуализация"]
         with open(filename, 'w', newline='') as html_file:
             html_file.write("<html>")
             html_file.write("<head>")
@@ -126,6 +126,9 @@ try:
 except:
     city = None
 
-eow = ExportOW()
-eow.run(sys.argv[1], sys.argv[2], city)
-
+try:
+    eow = ExportOW()
+    eow.run(sys.argv[1], sys.argv[2], city)
+except Exception as e:
+    print(e)
+    print_help()

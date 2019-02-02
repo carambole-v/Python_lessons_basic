@@ -184,7 +184,7 @@ class OpenWeatherApp:
             print("Такого города в БД для выбраноой нет")
             return False
         cities_id_list = self.cities.get_city_id(country, city)
-        print(f"В укзанной стране найдено городов с таким названием: {len(cities_id_list)}")
+        print(f"В указанной стране найдено городов с таким названием: {len(cities_id_list)}")
         print("Запрашиваю погоду по всем...")
         data = self.get_weather(cities_id_list)
         if "cnt" in data.keys():
